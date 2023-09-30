@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_celery_results",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -128,3 +129,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_CACHE_BACKEND = "django-cache"
+
+# django-celery-beat settings #
+
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+CELERY_BEAT_SCHEDULE = {
+    "debug-every-30-seconds": {
+        "task": "djc23_celery.celery.debug_task",
+        "schedule": 30.0,
+    },
+}
