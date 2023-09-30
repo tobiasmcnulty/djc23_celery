@@ -3,3 +3,9 @@ celery<5.4
 
 django-celery-results==2.5.1
 django-celery-beat==2.5.0
+
+Faker==19.6.2
+faker_education==1.2.1
+numpy==1.26.0
+pandas==2.1.1
+matplotlib==3.8.0
