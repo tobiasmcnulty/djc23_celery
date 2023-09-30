@@ -1,2 +1,4 @@
 Django<5.0
 celery<5.4
+
+django-celery-results==2.5.1
