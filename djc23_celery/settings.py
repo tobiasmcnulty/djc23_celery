@@ -125,6 +125,13 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# celery configuration #
+
+CELERY_BROKER_URL = "amqp://localhost:5672/"
+
+# Silence CPendingDeprecationWarning
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
 # django-celery-results settings #
 
 CELERY_RESULT_BACKEND = "django-db"
