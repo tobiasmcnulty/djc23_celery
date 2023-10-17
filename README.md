@@ -41,7 +41,7 @@ This repo contains the code accompanying the talk [How to Schedule Tasks with Ce
 Generate 100,000 fake voters and voter registrations in the database:
 
 ```sh
-python manage.py create_fake_voter_data 100000
+python manage.py create_fake_voter_data 10000
 ```
 
 ## Starting Celery processes
