@@ -2,12 +2,15 @@
 # https://levelup.gitconnected.com/how-to-write-a-pandas-dataframe-as-a-pdf-5cdf7d525488
 import math
 
+import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.backends.backend_pdf import PdfPages
 
 from .models import StationAssignment, VoterRegistration
 from .utils import grouper
+
+matplotlib.use("agg")
 
 
 def _draw_as_table(df, pagesize):
@@ -103,7 +106,7 @@ def write_station_list(center, station_id):
     num_v_pages = math.ceil(nrows / 40)  # ~40 rows per page (not exact)
     dataframe_to_pdf(
         df,
-        f"center_{center.center_id}_{station_id}.pdf",
+        f"output/center_{center.center_id}_{station_id}.pdf",
         numpages=(num_v_pages, 1),
         footer_prefix=f"{center.center_name} ({center.center_id}) Voter List - ",
     )

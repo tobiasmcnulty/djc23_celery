@@ -6,43 +6,51 @@ This repo contains the code accompanying the talk [How to Schedule Tasks with Ce
 
 - [Python 3.11](https://www.python.org/downloads/)
 - [direnv](https://direnv.net/docs/installation.html)
-- A local checkout of this repository (`djc23_celery`)
-- A terminal (shell) open in the local checkout of this repository
+- Docker
 
 ## Getting started
 
-1. Create a Python 3.11 virtualenv:
+1. Checkout this repo:
 
    ```sh
+   git clone git@github.com:tobiasmcnulty/djc23_celery.git
+   cd djc23_celery
+   ```
+
+2. Configure your `.envrc` file:
+
+   ```sh
+   # Use direnv to create a Python 3.11 virtual environment:
    echo "layout python python3.11" > .envrc
+   # On Mac, allow multithreading scripts:
+   echo "export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES" >> .envrc
+   # On all systems, activate the .envrc file:
    direnv allow
    ```
 
-2. Install requirements:
+3. Install requirements:
 
    ```sh
    python -m pip install -r requirements.txt
    ```
 
-3. Run migrations:
+4. Run migrations:
 
    ```sh
    python manage.py migrate
    ```
 
-4. Start broker (RabbitMQ):
+5. Start broker (RabbitMQ):
 
    ```sh
-   docker-compose up -d
+   docker run --rm -p 5672:5672 -d --name rabbitmq rabbitmq
    ```
 
-## Generating fake data
+6. Generate 10,000 fake citizens in the database:
 
-Generate 100,000 fake voters and voter registrations in the database:
-
-```sh
-python manage.py create_fake_voter_data 10000
-```
+   ```sh
+   python manage.py create_fake_voter_data 10000
+   ```
 
 ## Starting Celery processes
 
@@ -52,14 +60,6 @@ In one terminal, start the Celery worker with a concurrency of 8 (or another num
 
 ```sh
 celery -A djc23_celery worker -l INFO -c 8
-```
-
-### `beat`
-
-If testing `beat` (not needed for the management commands below), start the process in another terminal
-
-```sh
-celery -A djc23_celery beat -l INFO
 ```
 
 ## Testing tasks with management commands
@@ -171,3 +171,10 @@ When all the tasks in the group have been completed, `task_sum_pages` is queued 
 [2023-10-04 15:31:38,405: WARNING/ForkPoolWorker-7] sum_pages: Total pages written: 263
 [2023-10-04 15:31:38,407: INFO/ForkPoolWorker-7] Task voter_rolls.tasks.task_sum_pages[e09cba55-a1f4-45f9-9a4e-57739d149f93] succeeded in 0.002908542999648489s: None
 ```
+
+## Cleanup
+
+To clean up processes left by this repo, after testing you can:
+
+- Stop the Celery worker with Control-C
+- Stop the `rabbitmq` container with: `docker stop rabbitmq`
